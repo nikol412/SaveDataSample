@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingBottom="15dp"
+        android:textColor="@color/purple_200"
+        android:textSize="22sp"
+        tools:text="word" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/purple_200" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_word_meanings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/list_item_word_meaning" />
+</LinearLayout>

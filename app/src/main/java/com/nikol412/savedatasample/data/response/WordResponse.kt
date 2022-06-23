@@ -7,9 +7,9 @@ class WordResponse : ArrayList<WordResponseItem>()
 
 data class WordItemUI(
     val word: String,
-    val phonetic: String,
+    val phonetic: String?,
     val origin: String?,
-    val meanings: List<String>
+    val meanings: List<String>?
 )
 
 fun WordResponseItem.toIU() =
@@ -17,20 +17,20 @@ fun WordResponseItem.toIU() =
         this.word,
         this.phonetic,
         this.origin,
-        this.meanings.map { it.definitions.map { it.definition } }.flatten()
+        this.meanings?.map { it.definitions.map { it.definition } }?.flatten()
     )
 
 data class WordResponseItem(
     @SerializedName("word")
     val word: String,
     @SerializedName("phonetic")
-    val phonetic: String,
+    val phonetic: String?,
 //    @SerializedName("phonetics")
 //    val phonetics: List<Phonetic>,
     @SerializedName("origin")
     val origin: String?,
     @SerializedName("meanings")
-    val meanings: List<Meaning>
+    val meanings: List<Meaning>?
 )
 
 data class Definition(

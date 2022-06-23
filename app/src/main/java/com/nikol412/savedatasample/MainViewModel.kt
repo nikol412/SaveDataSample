@@ -13,18 +13,22 @@ class MainViewModel : ViewModel() {
     private val dictionaryRepositoryImpl =
         DictionaryRepositoryImpl(Dispatchers.IO, Retrofit.getRetrofit())
 
-    val currentWord = MutableLiveData<WordItemUI>()
+    val words = MutableLiveData<List<WordItemUI>>(emptyList())
 
     fun onLoadWordClick(query: String?) {
         if (query.isNullOrBlank()) return
         viewModelScope.launch {
-            currentWord.value = dictionaryRepositoryImpl.getWord(query).firstOrNull()
+            dictionaryRepositoryImpl.getWord(query).firstOrNull()?.let { addWord(it) }
         }
     }
 
-    fun onSaveImagesClick() {
-        //todo implement
+    private fun addWord(word: WordItemUI) {
+        words.value = words.value!! + word
     }
+
+//    fun onSaveImagesClick() {
+//        //todo implement
+//    }
 
     fun onSavingTypeChangeClick() {
         //todo implement

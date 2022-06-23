@@ -22,4 +22,15 @@ class DictionaryRepositoryImpl(
     fun getAllLocalWords() {
         //todo implement
     }
+
+    fun selectSavingDestionation(destination: SaveDestinationEnum) {
+        //todo implement
+    }
+}
+
+enum class SaveDestinationEnum {
+    ROOM,
+    SHARED_PREFERENCES,
+    PROTO_DATASTORE,
+    PREFERENCES_DATASTORE
 }
