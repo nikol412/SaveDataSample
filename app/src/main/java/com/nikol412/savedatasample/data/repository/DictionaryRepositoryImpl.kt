@@ -10,8 +10,14 @@ class DictionaryRepositoryImpl(
     private val defaultContext: CoroutineDispatcher,
     private val retrofitDataSource: RetrofitDataSource
 ) : ImagesRepository {
-    suspend fun getWord(query: String): List<WordItemUI> {
-        return loadWord(query).map { it.toIU() }
+    private val words: List<WordItemUI> = mutableListOf()
+
+    suspend fun getWord(query: String): WordItemUI {
+        return getLocalWord(query) ?: loadWord(query).map { it.toIU() }.first()
+    }
+
+    private fun getLocalWord(query: String): WordItemUI? {
+        return words.find { it.word == query }
         //todo search for local and than remote word
     }
 

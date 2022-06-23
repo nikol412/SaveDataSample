@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
     fun onLoadWordClick(query: String?) {
         if (query.isNullOrBlank()) return
         viewModelScope.launch {
-            dictionaryRepositoryImpl.getWord(query).firstOrNull()?.let { addWord(it) }
+            addWord(dictionaryRepositoryImpl.getWord(query))
         }
     }
 
