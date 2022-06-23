@@ -16,48 +16,39 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
-            android:checkable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="Shared Pref" />
 
         <com.google.android.material.chip.Chip
-            android:checkable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="Room" />
 
         <com.google.android.material.chip.Chip
-            android:checkable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="Proto DataStore" />
 
         <com.google.android.material.chip.Chip
-            android:checkable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="Preferences DataStore" />
     </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_words"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/list_item_word"
-        tools:itemCount="10"
-        app:layout_constraintTop_toBottomOf="@id/chip_storage_selector"
-        app:layout_constraintBottom_toTopOf="@id/et_search_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
-<!--    <TextView-->
-<!--        android:id="@+id/tv_word"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:text="sample test word" />-->
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/et_search_layout"
+        app:layout_constraintTop_toBottomOf="@id/chip_storage_selector"
+        tools:itemCount="10"
+        tools:listitem="@layout/list_item_word" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_search_layout"
