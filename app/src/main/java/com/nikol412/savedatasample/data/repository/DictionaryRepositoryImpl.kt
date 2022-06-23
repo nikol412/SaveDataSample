@@ -1,36 +1,51 @@
 package com.nikol412.savedatasample.data.repository
 
+import com.nikol412.savedatasample.data.dataSource.LocalDataSource
 import com.nikol412.savedatasample.data.dataSource.RetrofitDataSource
+import com.nikol412.savedatasample.data.dataSource.SharedPreferencesDataSource
 import com.nikol412.savedatasample.data.response.WordItemUI
-import com.nikol412.savedatasample.data.response.toIU
+import com.nikol412.savedatasample.data.response.toUi
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DictionaryRepositoryImpl(
     private val defaultContext: CoroutineDispatcher,
-    private val retrofitDataSource: RetrofitDataSource
-) : ImagesRepository {
-    private val words: List<WordItemUI> = mutableListOf()
+    private val retrofitDataSource: RetrofitDataSource,
+    private val sharedPrefDataSource: SharedPreferencesDataSource
+) : DictionaryRepository {
+    private var currentSaveDataSource: LocalDataSource? = null
 
-    suspend fun getWord(query: String): WordItemUI {
-        return getLocalWord(query) ?: loadWord(query).map { it.toIU() }.first()
+    override suspend fun getWord(query: String): WordItemUI {
+        val localWord = getLocalWord(query)
+        val remoteWord = loadWord(query)
+        return localWord ?: remoteWord
     }
 
-    private fun getLocalWord(query: String): WordItemUI? {
-        return words.find { it.word == query }
-        //todo search for local and than remote word
-    }
+    private suspend fun getLocalWord(query: String): WordItemUI? =
+        currentSaveDataSource?.getWord(query)
 
     private suspend fun loadWord(query: String) = withContext(defaultContext) {
-        return@withContext retrofitDataSource.getWord(query)
+        val newWord = retrofitDataSource.getWord(query).toUi()
+        withContext(Dispatchers.Main) {
+            currentSaveDataSource?.saveWord(newWord)
+        }
+
+        return@withContext newWord
     }
 
-    fun getAllLocalWords() {
-        //todo implement
+    override suspend fun getAllLocalWords(): List<WordItemUI>? {
+        return currentSaveDataSource?.getAllWords()
     }
 
-    fun selectSavingDestionation(destination: SaveDestinationEnum) {
-        //todo implement
+    override fun selectSavingDestination(destination: SaveDestinationEnum) {
+        currentSaveDataSource = when (destination) {
+            SaveDestinationEnum.ROOM -> null
+            SaveDestinationEnum.SHARED_PREFERENCES -> sharedPrefDataSource
+            SaveDestinationEnum.PREFERENCES_DATASTORE -> null
+            SaveDestinationEnum.PROTO_DATASTORE -> null
+            SaveDestinationEnum.NONE -> null
+        }
     }
 }
 
@@ -38,5 +53,6 @@ enum class SaveDestinationEnum {
     ROOM,
     SHARED_PREFERENCES,
     PROTO_DATASTORE,
-    PREFERENCES_DATASTORE
+    PREFERENCES_DATASTORE,
+    NONE
 }

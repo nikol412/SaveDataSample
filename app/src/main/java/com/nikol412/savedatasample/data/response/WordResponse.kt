@@ -12,13 +12,15 @@ data class WordItemUI(
     val meanings: List<String>?
 )
 
-fun WordResponseItem.toIU() =
+fun WordResponseItem.toUi() =
     WordItemUI(
         this.word,
         this.phonetic,
         this.origin,
         this.meanings?.map { it.definitions.map { it.definition } }?.flatten()
     )
+
+fun WordResponse.toUi() = this.map { it.toUi() }.firstOrNull() ?: throw NoSuchElementException("word response is empty")
 
 data class WordResponseItem(
     @SerializedName("word")
