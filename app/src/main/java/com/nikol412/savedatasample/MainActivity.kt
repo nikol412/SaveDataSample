@@ -1,7 +1,6 @@
 package com.nikol412.savedatasample
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nikol412.savedatasample.adapter.WordAdapter
@@ -32,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private fun initListeners() {
         binding.buttonSearch.setOnClickListener {
             viewModel.onLoadWordClick(binding.etSearch.text.toString())
+            binding.etSearch.text.clear()
         }
         binding.chipStorageSelector.setOnCheckedStateChangeListener { group, checkedIds ->
             viewModel.onSavingTypeChangeClick(checkedIds.firstOrNull())
@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private fun subscribeToViewModel() = with(viewModel) {
         words.observe(this@MainActivity) {
             wordAdapter.submitList(it)
+            if (it.isNullOrEmpty().not()) binding.rvWords.smoothScrollToPosition(it.lastIndex)
         }
     }
 }
