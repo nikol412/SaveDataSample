@@ -3,10 +3,13 @@ package com.nikol412.savedatasample
 import android.app.Application
 import android.content.Context
 import com.google.gson.Gson
+import com.nikol412.savedatasample.data.dataSource.GsonWordConverted
+import com.nikol412.savedatasample.data.dataSource.PrefDataStoreDataSource
 import com.nikol412.savedatasample.data.dataSource.Retrofit
 import com.nikol412.savedatasample.data.dataSource.SharedPreferencesDataSource
 import com.nikol412.savedatasample.data.repository.DictionaryRepository
 import com.nikol412.savedatasample.data.repository.DictionaryRepositoryImpl
+import com.nikol412.savedatasample.utils.dataStore
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -32,7 +35,9 @@ class SaveApp : Application(), KoinComponent {
 private val module = module {
     single { Dispatchers.IO }
     single { Retrofit.getRetrofit() }
-    single { Gson() }
+    factory { Gson() }
+    factory { GsonWordConverted(get()) }
+    single { androidApplication().dataStore }
     single {
         androidApplication().getSharedPreferences(
             SharedPreferencesDataSource.SHARED_PREF_DEFAULT,
@@ -40,7 +45,8 @@ private val module = module {
         )
     }
     single { SharedPreferencesDataSource(get(), get()) }
-    single<DictionaryRepository> { DictionaryRepositoryImpl(get(), get(), get()) }
+    single { PrefDataStoreDataSource(get(), get()) }
+    single<DictionaryRepository> { DictionaryRepositoryImpl(get(), get(), get(), get()) }
 }
 
 private val viewModelModule = module {

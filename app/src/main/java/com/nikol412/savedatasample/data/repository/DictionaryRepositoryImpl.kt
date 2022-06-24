@@ -1,6 +1,7 @@
 package com.nikol412.savedatasample.data.repository
 
 import com.nikol412.savedatasample.data.dataSource.LocalDataSource
+import com.nikol412.savedatasample.data.dataSource.PrefDataStoreDataSource
 import com.nikol412.savedatasample.data.dataSource.RetrofitDataSource
 import com.nikol412.savedatasample.data.dataSource.SharedPreferencesDataSource
 import com.nikol412.savedatasample.data.response.WordItemUI
@@ -12,7 +13,8 @@ import kotlinx.coroutines.withContext
 class DictionaryRepositoryImpl(
     private val defaultContext: CoroutineDispatcher,
     private val retrofitDataSource: RetrofitDataSource,
-    private val sharedPrefDataSource: SharedPreferencesDataSource
+    private val sharedPrefDataSource: SharedPreferencesDataSource,
+    private val prefDataStoreDataSource: PrefDataStoreDataSource
 ) : DictionaryRepository {
     private var currentSaveDataSource: LocalDataSource? = null
 
@@ -42,7 +44,7 @@ class DictionaryRepositoryImpl(
         currentSaveDataSource = when (destination) {
             SaveDestinationEnum.ROOM -> null
             SaveDestinationEnum.SHARED_PREFERENCES -> sharedPrefDataSource
-            SaveDestinationEnum.PREFERENCES_DATASTORE -> null
+            SaveDestinationEnum.PREFERENCES_DATASTORE -> prefDataStoreDataSource
             SaveDestinationEnum.PROTO_DATASTORE -> null
             SaveDestinationEnum.NONE -> null
         }
