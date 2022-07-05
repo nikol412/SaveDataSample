@@ -2,11 +2,10 @@ package com.nikol412.savedatasample
 
 import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import com.google.gson.Gson
-import com.nikol412.savedatasample.data.dataSource.GsonWordConverted
-import com.nikol412.savedatasample.data.dataSource.PrefDataStoreDataSource
-import com.nikol412.savedatasample.data.dataSource.Retrofit
-import com.nikol412.savedatasample.data.dataSource.SharedPreferencesDataSource
+import com.nikol412.savedatasample.data.dataSource.*
+import com.nikol412.savedatasample.data.entity.AppDatabase
 import com.nikol412.savedatasample.data.repository.DictionaryRepository
 import com.nikol412.savedatasample.data.repository.DictionaryRepositoryImpl
 import com.nikol412.savedatasample.utils.dataStore
@@ -26,7 +25,7 @@ class SaveApp : Application(), KoinComponent {
         super.onCreate()
         startKoin {
             androidContext(this@SaveApp)
-            modules(module, viewModelModule)
+            modules(databaseModule, module, viewModelModule)
             androidLogger(Level.DEBUG)
         }
     }
@@ -46,9 +45,24 @@ private val module = module {
     }
     single { SharedPreferencesDataSource(get(), get()) }
     single { PrefDataStoreDataSource(get(), get()) }
-    single<DictionaryRepository> { DictionaryRepositoryImpl(get(), get(), get(), get()) }
+    single { RoomDataSource(get(), get()) }
+    single<DictionaryRepository> { DictionaryRepositoryImpl(get(), get(), get(), get(), get()) }
 }
 
 private val viewModelModule = module {
     viewModel { MainViewModel(get()) }
+}
+
+private val databaseModule = module {
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "save-data-db"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    single { get<AppDatabase>().wordDao() }
 }
