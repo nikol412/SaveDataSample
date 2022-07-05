@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import com.google.gson.Gson
 import com.nikol412.savedatasample.data.dataSource.*
-import com.nikol412.savedatasample.data.entity.AppDatabase
+import com.nikol412.savedatasample.data.roomDb.AppDatabase
 import com.nikol412.savedatasample.data.repository.DictionaryRepository
 import com.nikol412.savedatasample.data.repository.DictionaryRepositoryImpl
 import com.nikol412.savedatasample.utils.dataStore
